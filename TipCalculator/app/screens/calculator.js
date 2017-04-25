@@ -1,4 +1,4 @@
-import Utils from './utils'
+import Utils from '../utils'
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -8,7 +8,9 @@ import {
   TextInput,
   Slider,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Navigator,
+  Button
 } from 'react-native';
 
 import SegmentedControlTab from 'react-native-segmented-control-tab'
@@ -49,7 +51,15 @@ class Calculator extends Component {
 
   render() {
     return (
+
       <View>
+        
+        <Button
+          style={{flex:1, margin:5, fontSize:20}}
+          title="Setting"
+          onPress={() => this.props.navigator.push({id:'SettingsPage'})}
+        />
+
         <TouchableWithoutFeedback onPress={ () => {Keyboard.dismiss()} }>
           <View>
             
