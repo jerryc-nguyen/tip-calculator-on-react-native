@@ -12,7 +12,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Navigator,
-  Button
+  Button,
+  LayoutAnimation
 } from 'react-native';
 
 import SegmentedControlTab from 'react-native-segmented-control-tab'
@@ -27,7 +28,17 @@ class Calculator extends Component {
       billAmount: 0,
       tipAmount: 0,
       percent: 0.1,
-      result: 0
+      result: 0,
+      marginTop: 100,
+      opacity: 0,
+      fadeInSegmented: {
+        marginTop: 0,
+        opacity: 1
+      },
+      fadeOutSegmented: {
+        marginTop: 100,
+        opacity: 0
+      },
     };
 
     this.props.route.performRightAction = () => {
@@ -57,43 +68,47 @@ class Calculator extends Component {
     this.setState({ billAmount:  value}, () => {
       this.handleTipAmountChanged(this.state.selectedIndex)
     });
+
+    LayoutAnimation.easeInEaseOut();
+
+    if (value > 0) {
+      this.setState({marginTop: 0, opacity: 1});
+    } else { 
+      this.setState({marginTop: 100, opacity: 0});
+    }
   }
 
   render() {
     return (
 
-      <View style={{paddingTop: 50}}>
+      <View style={{ marginTop: 60, padding: 10, backgroundColor: "white" }}>
 
         <TouchableWithoutFeedback onPress={ () => {Keyboard.dismiss()} }>
           <View>
-            
-            <View>
-              <Text>Tip calculator</Text>
-            </View>
 
             <View>
-              <Text>Bill Amount</Text>
-              <TextInput keyboardType='numeric' style={{height: 40}} onChangeText={this.handleAmountChanged} placeholder="Input your bill amount"/>
+              <TextInput autoFocus={true} keyboardType='numeric' style={{height: 40}} onChangeText={this.handleAmountChanged} placeholder="Input your bill amount"/>
             </View>
 
-            <View>
-              <SegmentedControlTab
-                values={ ['10%', '20%', '30%'] }
-                selectedIndex={ this.state.selectedIndex }
-                onTabPress={ this.handleTipAmountChanged }
-              />
-            </View>
+            <View style={{marginTop: this.state.marginTop, opacity: this.state.opacity}}>
+              <View>
+                <SegmentedControlTab
+                  values={ ['10%', '20%', '30%'] }
+                  selectedIndex={ this.state.selectedIndex }
+                  onTabPress={ this.handleTipAmountChanged }
+                />
+              </View>
 
-            <View>
-              <Text>Bill amount: { this.state.billAmount }</Text>
-              <Text>Tip amount: { this.state.tipAmount }</Text>
-              <Text>Percent: { this.state.percent }</Text>
-            </View>
+              <View>
+                <Text>Bill amount: { this.state.billAmount }</Text>
+                <Text>Tip amount: { this.state.tipAmount }</Text>
+                <Text>Percent: { this.state.percent }</Text>
+              </View>
 
-            <View>
-              <Text>Result: { this.state.result }</Text>
+              <View>
+                <Text>Result: { this.state.result }</Text>
+              </View>
             </View>
-
           </View>
         </TouchableWithoutFeedback>
       </View>

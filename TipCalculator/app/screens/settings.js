@@ -35,25 +35,21 @@ class Settings extends Component {
   }
 
   async getSceneTransition() {
-    try{
-      let sceneTransitionValue = await AsyncStorage.getItem("SCENE_SELECTED", () =>{
-        this.setState({
-          sceneTransition : sceneTransitionValue
-        });
+    AsyncStorage.getItem("SCENE_SELECTED", (error, value) => {
+      if (error) {
+        return
+      }
+      this.setState({
+        sceneTransition : value
       });
-    }catch(error){
-      console.log("Hmm, something when wrong when get data..." + error);
-    }
+    });
   }
   
   async setSelectedSceneTransition(scene) {
     try {
-      await AsyncStorage.setItem('SCENE_SELECTED', scene);
-
       this.setState({
         sceneTransition : scene
       })
-
     } catch(error) {
        console.log("Hmm, something when wrong when set data..." + error);
     }
@@ -65,9 +61,9 @@ class Settings extends Component {
 
   render() {
     return(
-      <View style={{ marginTop: 50,padding: 10, backgroundColor: "white" }}>
+      <View style={{ marginTop: 60, padding: 10, backgroundColor: "white" }}>
         <View>
-          <Text style={{fontSize: 25}}>Scene Transitions</Text>
+          <Text style={{fontSize: 20}}>Scene Transitions</Text>
           <Picker
             selectedValue={this.state.sceneTransition}
             onValueChange={(scene) => this.setSelectedSceneTransition(scene)}>
