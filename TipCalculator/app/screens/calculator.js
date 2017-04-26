@@ -1,5 +1,7 @@
 import Utils from '../utils'
 import React, { Component } from 'react';
+import AppRoutes from '../routes'
+
 import {
   AppRegistry,
   StyleSheet,
@@ -27,6 +29,14 @@ class Calculator extends Component {
       percent: 0.1,
       result: 0
     };
+
+    this.props.route.performRightAction = () => {
+      this.goto(AppRoutes.SettingsPage)
+    }
+  }
+
+  goto(page) {
+    this.props.navigator.push(page)
   }
 
   handleTipAmountChanged = (index)=> {
@@ -52,13 +62,7 @@ class Calculator extends Component {
   render() {
     return (
 
-      <View>
-        
-        <Button
-          style={{flex:1, margin:5, fontSize:20}}
-          title="Setting"
-          onPress={() => this.props.navigator.push({id:'SettingsPage'})}
-        />
+      <View style={{paddingTop: 50}}>
 
         <TouchableWithoutFeedback onPress={ () => {Keyboard.dismiss()} }>
           <View>

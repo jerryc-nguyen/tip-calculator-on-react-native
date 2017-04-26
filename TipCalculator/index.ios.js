@@ -12,11 +12,14 @@ import {
   View,
   Navigator,
   Button,
-  AsyncStorage
+  AsyncStorage,
+  TouchableHighlight
 } from 'react-native';
 
 import CalculatorPage from './app/screens/calculator'
 import SettingsPage from './app/screens/settings'
+import AppRoutes from './app/routes'
+import CustomNavBar from './app/custom-nav-bar'
 
 export default class TipCalculator extends Component {
 
@@ -42,30 +45,28 @@ export default class TipCalculator extends Component {
   renderScene(route, navigator) {
     switch (route.id) {
       case 'CalculatorPage':
-        return <CalculatorPage navigator={navigator} />
+        return <CalculatorPage navigator={navigator} route={route} />
         break;
       case 'SettingsPage':
-        return <SettingsPage navigator={navigator} />
+        return <SettingsPage navigator={navigator} route={route} />
         break;
       default:
     }
   }
 
   configureScene(route) {
-    if (route.sceneConfig) {
-      return route.sceneConfig;
-    }
-
     return Navigator.SceneConfigs[this.state.sceneTransition];
   }
 
   render() {
+
     return (
       <Navigator 
-        initialRoute={{id: 'CalculatorPage', title: 'Tip Calculator Page'}} 
+        initialRoute={AppRoutes.CalculatorPage} 
         onDidFocus={this.getSceneTransition.bind(this)}
         renderScene={this.renderScene.bind(this)}
-        configureScene={this.configureScene.bind(this)} 
+        configureScene={this.configureScene.bind(this)}
+        navigationBar={CustomNavBar} 
       />
     );
   }

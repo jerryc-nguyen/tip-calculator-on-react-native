@@ -1,5 +1,7 @@
 import Utils from '../utils'
 import React, { Component } from 'react';
+import AppRoutes from '../routes'
+
 import {
   AppRegistry,
   StyleSheet,
@@ -18,21 +20,26 @@ import {
 class Settings extends Component {
   constructor(props) {
     super(props);
-    
-    console.log("constructor init!");
-
+  
     this.state = {
       sceneTransition: "FloatFromRight"
     }
+
+    this.props.route.performRightAction = () => {
+      this.props.navigator.pop();
+    }
+  }
+
+  goto(page) {
+    this.props.navigator.pop(page);
   }
 
   async getSceneTransition() {
     try{
-      let sceneTransitionValue = await AsyncStorage.getItem("SCENE_SELECTED");
-      console.log("sceneTransitionValue", sceneTransitionValue);
-      // Store value to State
-      this.setState({
-        sceneTransition : sceneTransitionValue
+      let sceneTransitionValue = await AsyncStorage.getItem("SCENE_SELECTED", () =>{
+        this.setState({
+          sceneTransition : sceneTransitionValue
+        });
       });
     }catch(error){
       console.log("Hmm, something when wrong when get data..." + error);
@@ -59,12 +66,6 @@ class Settings extends Component {
   render() {
     return(
       <View style={{ marginTop: 50,padding: 10, backgroundColor: "white" }}>
-        <Button
-          style={{width: 10, flex: 0.1}}
-          title="Go Back"
-          onPress={() => this.props.navigator.pop({id:"CalculatorPage"})}
-        />
-
         <View>
           <Text style={{fontSize: 25}}>Scene Transitions</Text>
           <Picker
