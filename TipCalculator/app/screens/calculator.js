@@ -30,15 +30,7 @@ class Calculator extends Component {
       percent: 0.1,
       result: 0,
       marginTop: 100,
-      opacity: 0,
-      fadeInSegmented: {
-        marginTop: 0,
-        opacity: 1
-      },
-      fadeOutSegmented: {
-        marginTop: 100,
-        opacity: 0
-      },
+      opacity: 0
     };
 
     this.props.route.performRightAction = () => {
