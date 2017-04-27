@@ -23,11 +23,7 @@ class Settings extends Component {
   constructor(props) {
     super(props);
 
-    this.currenciesOptions = { 
-      dong:     { label: "Viet Nam Dong", locale: "vi-VN", option: { style: 'currency', currency: 'd' }},
-      usdollar: { label: "US Dollar",     locale: "en-US", option: { style: 'currency', currency: '$' }},
-      euro:     { label: "Euro",          locale: "en-US", option: { style: 'currency', currency: '€' }}
-    }
+    this.currenciesOptions = Utils.currencies;
 
     this.currencies = Object.keys(this.currenciesOptions)
 
@@ -35,15 +31,15 @@ class Settings extends Component {
       return this.currenciesOptions[item].label 
     })
 
-    console.log("this.selectCurrencies", this.selectCurrencies);
-
     this.state = {
       sceneTransition: "FloatFromRight",
-      currency: "dong",
-      selectedCurrencyIndex: 0
+      selectedCurrency: "dong",
+      selectedCurrencyIndex: 0,
+      tipDefaultValues: "",
     }
 
     this.props.route.performRightAction = () => {
+      this.saveSettings();
       this.props.navigator.pop();
     }
   }
@@ -52,53 +48,59 @@ class Settings extends Component {
     this.props.navigator.pop(page);
   }
 
-  async getSceneTransition() {
-    AsyncStorage.getItem("SCENE_SELECTED", (error, value) => {
+  loadSettings() {
+    AsyncStorage.getItem("SELECTED_SETTINGS", (error, value) => {
       if (error) {
         return
       }
-      this.setState({
-        sceneTransition : value
-      });
+      let setting = JSON.parse(value);
+      this.setState(setting);
     });
   }
   
-  async setSelectedSceneTransition(scene) {
+  saveSettings() {
     try {
-      this.setState({
-        sceneTransition : scene
-      })
-
-      AsyncStorage.setItem("SCENE_SELECTED", scene);
+      let data = {
+        sceneTransition: this.state.sceneTransition,
+        selectedCurrency: this.state.selectedCurrency,
+        selectedCurrencyIndex: this.state.selectedCurrencyIndex,
+        tipDefaultValues: this.state.tipDefaultValues
+      }
+      AsyncStorage.setItem("SELECTED_SETTINGS", JSON.stringify(data));
     } catch(error) {
        console.log("Hmm, something when wrong when set data..." + error);
     }
   }
 
+  selectedSceneTransition(scene) {
+    this.setState({
+      sceneTransition : scene
+    })
+  }
+
   componentDidMount() {
-    this.getSceneTransition();
+    this.loadSettings();
   }
 
   handleTipValuesChanged(values) {
     this.setState({
-      defaultTipValues : values
+      tipDefaultValues : values
     })
   }
 
   handleCurrencyChanged(index) {
     this.setState({
-      currency : this.currencies[index],
+      selectedCurrency : this.currencies[index],
       selectedCurrencyIndex: index
-    }, () => { console.log(this.state) })
+    })
   }
-
 
   renderDefaultTips() {
     return (
       <View>
         <Text style={{fontSize: 20}}>Default tip values: </Text>
         <View>
-          <TextInput autoFocus={true} style={{height: 40}} onChangeText={this.handleTipValuesChanged} placeholder="Default tip values"/>
+          <TextInput autoFocus={true} style={{height: 40}} onChangeText={this.handleTipValuesChanged.bind(this)} placeholder="Default tip values" value={this.state.tipDefaultValues}/>
         </View>
       </View>
     )
@@ -124,7 +126,7 @@ class Settings extends Component {
         <Text style={{fontSize: 20}}>Scene Transitions: </Text>
         <Picker
           selectedValue={this.state.sceneTransition}
-          onValueChange={(scene) => this.setSelectedSceneTransition(scene)}>
+          onValueChange={this.selectedSceneTransition.bind(this)}>
           <Picker.Item label="FloatFromRight" value="FloatFromRight" />
           <Picker.Item label="FloatFromLeft" value="FloatFromLeft" />
           <Picker.Item label="FloatFromBottom" value="FloatFromBottom" />

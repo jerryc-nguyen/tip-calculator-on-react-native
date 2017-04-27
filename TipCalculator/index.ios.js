@@ -28,18 +28,14 @@ export default class TipCalculator extends Component {
     this.state = { sceneTransition: "FloatFromRight" };
   }
 
-  async getSceneTransition() {
-    try{
-      let sceneTransitionValue = await AsyncStorage.getItem("SCENE_SELECTED", (error, data) => {
-        this.setState({
-          sceneTransition : data
-        });
-      })
-
-      return sceneTransitionValue;
-    }catch(error){
-      console.log("Hmm, something when wrong when get data..." + error);
-    }
+  loadSettings() {
+    AsyncStorage.getItem("SELECTED_SETTINGS", (error, value) => {
+      if (error) {
+        return
+      }
+      let setting = JSON.parse(value);
+      this.setState(setting);
+    });
   }
 
   renderScene(route, navigator) {
@@ -63,7 +59,7 @@ export default class TipCalculator extends Component {
     return (
       <Navigator 
         initialRoute={AppRoutes.CalculatorPage} 
-        onDidFocus={this.getSceneTransition.bind(this)}
+        onDidFocus={this.loadSettings.bind(this)}
         renderScene={this.renderScene.bind(this)}
         configureScene={this.configureScene.bind(this)}
         navigationBar={CustomNavBar} 
