@@ -44,6 +44,10 @@ class Calculator extends Component {
     this.props.route.performRightAction = () => {
       this.goto(AppRoutes.SettingsPage)
     }
+
+    this.props.route.eventHandler.addListener("SELECTED_SETTINGS_CHANGED", () => {
+      this.loadSettings();
+    })
   }
 
   loadSettings() {
@@ -172,8 +176,8 @@ class Calculator extends Component {
                 <Text style={{lineHeight: 25}}>Percent: { this.state.percent }</Text>
               </View>
 
-              <View>
-                <Text>Result: { Utils.formatNumber(this.state.result, this.state.selectedCurrency) }</Text>
+              <View style={{marginTop: 20}}>
+                <Text style={{fontWeight: "700", fontSize: 20}}>Result: { Utils.formatNumber(this.state.result, this.state.selectedCurrency) }</Text>
               </View>
             </Animated.View>
           </View>

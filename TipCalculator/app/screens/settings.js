@@ -1,6 +1,7 @@
 import Utils from '../utils'
 import React, { Component } from 'react';
 import AppRoutes from '../routes'
+import  EventEmitter from 'EventEmitter';
 
 import {
   AppRegistry,
@@ -11,7 +12,6 @@ import {
   Slider,
   Keyboard,
   TouchableWithoutFeedback,
-  Navigator,
   Button,
   Picker,
   AsyncStorage
@@ -40,6 +40,7 @@ class Settings extends Component {
 
     this.props.route.performRightAction = () => {
       this.saveSettings();
+      this.props.route.eventHandler.emit('SELECTED_SETTINGS_CHANGED');
       this.props.navigator.pop();
     }
   }
