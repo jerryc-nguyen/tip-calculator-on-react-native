@@ -21,6 +21,6 @@ export default (
         ); 
       }, 
       Title: (route, navigator, index, navState) => { return (<Text>{route.title}</Text>); }, }} 
-      style={{backgroundColor: 'gray'}} 
+      style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}} 
   />
 )

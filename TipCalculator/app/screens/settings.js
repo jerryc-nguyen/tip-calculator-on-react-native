@@ -108,7 +108,7 @@ class Settings extends Component {
 
   renderSelectCurrencies() {
     return (
-      <View>
+      <View style={{marginTop: 30}}>
         <Text style={{fontSize: 20}}>Currency: </Text>
 
         <SegmentedControlTab
@@ -122,7 +122,7 @@ class Settings extends Component {
 
   renderSelectScenes() {
     return (
-      <View>
+      <View style={{marginTop: 30}}>
         <Text style={{fontSize: 20}}>Scene Transitions: </Text>
         <Picker
           selectedValue={this.state.sceneTransition}

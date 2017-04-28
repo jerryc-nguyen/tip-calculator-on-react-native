@@ -14,7 +14,8 @@ import {
   Navigator,
   Button,
   LayoutAnimation,
-  AsyncStorage
+  AsyncStorage,
+  Animated
 } from 'react-native';
 
 import SegmentedControlTab from 'react-native-segmented-control-tab'
@@ -32,10 +33,12 @@ class Calculator extends Component {
       tipAmount: 0,
       percent: 0.1,
       result: 0,
-      marginTop: 100,
-      opacity: 0,
+      marginTop: new Animated.Value(100),
+      opacity: new Animated.Value(0),
       tipDefaultValues: ["10%", "15%", "20%"],
-      selectedCurrency: "dong"
+      selectedCurrency: "dong",
+      billAmountMarginTop: new Animated.Value(100),
+      billAmountHeight: new Animated.Value(150)
     };
 
     this.props.route.performRightAction = () => {
@@ -86,12 +89,55 @@ class Calculator extends Component {
       this.handleTipAmountChanged(this.state.selectedTipIndex)
     });
 
-    LayoutAnimation.easeInEaseOut();
-
     if (value > 0) {
-      this.setState({marginTop: 0, opacity: 1});
+      Animated.timing(
+          this.state.opacity,
+          {
+              toValue: 1,
+              duration: 300
+          }
+      ).start();
+
+      Animated.timing(
+          this.state.marginTop,
+          {
+              toValue: 0,
+              duration: 300
+          }
+      ).start();
+
+      Animated.timing(
+          this.state.billAmountMarginTop,
+          {
+              toValue: 0,
+              duration: 300
+          }
+      ).start();
+
     } else { 
-      this.setState({marginTop: 100, opacity: 0});
+      Animated.timing(
+          this.state.opacity,
+          {
+              toValue: 0,
+              duration: 500
+          }
+      ).start();
+
+      Animated.timing(
+          this.state.marginTop,
+          {
+              toValue: 100,
+              duration: 500
+          }
+      ).start();
+
+      Animated.timing(
+          this.state.billAmountMarginTop,
+          {
+              toValue: 100,
+              duration: 300
+          }
+      ).start();
     }
   }
 
@@ -107,11 +153,11 @@ class Calculator extends Component {
         <TouchableWithoutFeedback onPress={ () => {Keyboard.dismiss()} }>
           <View>
 
-            <View>
-              <TextInput autoFocus={true} keyboardType='numeric' style={{height: 40}} onChangeText={this.handleAmountChanged} placeholder="Input your bill amount"/>
-            </View>
+            <Animated.View style={{marginTop: this.state.billAmountMarginTop}}>
+              <TextInput autoFocus={true} keyboardType='numeric' style={{height: 80, fontSize: 40}} onChangeText={this.handleAmountChanged} placeholder="Bill amount"/>
+            </Animated.View>
 
-            <View style={{marginTop: this.state.marginTop, opacity: this.state.opacity}}>
+            <Animated.View style={{marginTop: this.state.marginTop, opacity: this.state.opacity}}>
               <View>
                 <SegmentedControlTab
                   values={ this.state.tipDefaultValues }
@@ -120,16 +166,16 @@ class Calculator extends Component {
                 />
               </View>
 
-              <View>
-                <Text>Bill amount: { this.state.billAmount }</Text>
-                <Text>Tip amount: { this.state.tipAmount }</Text>
-                <Text>Percent: { this.state.percent }</Text>
+              <View style={{marginTop: 10}}>
+                <Text style={{lineHeight: 25}}>Bill amount: { Utils.formatNumber(this.state.billAmount, this.state.selectedCurrency) }</Text>
+                <Text style={{lineHeight: 25}}>Tip amount: { Utils.formatNumber(this.state.tipAmount, this.state.selectedCurrency) }</Text>
+                <Text style={{lineHeight: 25}}>Percent: { this.state.percent }</Text>
               </View>
 
               <View>
                 <Text>Result: { Utils.formatNumber(this.state.result, this.state.selectedCurrency) }</Text>
               </View>
-            </View>
+            </Animated.View>
           </View>
         </TouchableWithoutFeedback>
       </View>
