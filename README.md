@@ -4,7 +4,7 @@
 
 Submitted by: **Nhan Nguyen**
 
-Time spent: **16** hours spent in total
+Time spent: **12** hours spent in total
 
 **Note** we do not require build this app for all Mobile OS, just based on what is fit for you.
 
@@ -40,7 +40,7 @@ The following **optional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/XPct148.gif' title='Video Walkthrough Tip Calculator React native' width='' alt='Video Walkthrough Tip Calculator React native' />
+![Video Walkthrough](demo.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
